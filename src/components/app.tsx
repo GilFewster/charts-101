@@ -2,8 +2,8 @@ import React from "react";
 import { Query } from "@cubejs-client/core";
 import { DataViewPie, DataViewInteractionHandler } from "./data-view";
 import { useCubeJSQuery } from "../hooks/useCubeJSQuery";
-import { Status } from "../util/status";
-import { ErrorMessage, LoadingMessage } from "./queryStatusMessage";
+import { Chart } from "./chart";
+import { overrideSVGFill, restoreSVGFill } from "../util/svgFillToggle";
 
 type Props = {
   children?: React.ReactNode[];
@@ -25,40 +25,23 @@ export const App = (props: Props): JSX.Element => {
     query,
   });
 
-  const width = 400;
-
-  const onMouseEnter: DataViewInteractionHandler = ({
-    data,
-    value,
-    target,
-  }) => {
-    console.log(data, value, target);
-    target?.setAttribute("fill", "green");
+  const onMouseEnter: DataViewInteractionHandler = ({ target }) => {
+    target && overrideSVGFill(target, "green");
   };
 
-  const onMouseLeave: DataViewInteractionHandler = ({
-    data,
-    value,
-    target,
-  }) => {
-    console.log(data, value, target);
-    target?.setAttribute("fill", "inherit");
+  const onMouseLeave: DataViewInteractionHandler = ({ target }) => {
+    target && restoreSVGFill(target);
   };
 
   return (
-    <div>
-      {status === Status.Idle && <p>Ready to query</p>}
-      {status === Status.Loading && <LoadingMessage />}
-      {status === Status.Failed && <ErrorMessage err={error} />}
-      {status === Status.Complete && (
-        <DataViewPie
-          dataSource={dataSource}
-          valueKey="Orders.count"
-          width={width}
-          onMouseEnter={onMouseEnter}
-          onMouseLeave={onMouseLeave}
-        />
-      )}
-    </div>
+    <Chart status={status} error={error}>
+      <DataViewPie
+        dataSource={dataSource}
+        valueKey="Orders.count"
+        width={400}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+      />
+    </Chart>
   );
 };
