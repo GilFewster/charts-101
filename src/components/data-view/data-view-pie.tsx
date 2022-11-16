@@ -1,27 +1,7 @@
 import React, { useCallback } from "react";
 import { Pie } from "@visx/shape";
 import { Group } from "@visx/group";
-import { DataSource, MouseInteractionHandler } from "./types";
-
-type Props = {
-  /**
-   * Sets the size of the svg graph in pixels. This should ultimately be optional, and default to 100% of the graph's container.
-   */
-  width: number;
-  /**
-   * The normalised data from a CubeJS Query
-   */
-  dataSource: DataSource;
-  /**
-   * Name of the datum key which holds the value for each point to be plotted on the graph
-   */
-  valueKey: string;
-
-  onMouseEnter?: MouseInteractionHandler;
-  onMouseLeave?: MouseInteractionHandler;
-};
-
-const defaultHandler: MouseInteractionHandler = ({ data, value }) => null;
+import { IDataView } from "./data-view-interface";
 
 const color = [
   "yellow",
@@ -34,13 +14,13 @@ const color = [
   "tomato",
 ];
 
-export const PieChart = ({
+export const DataViewPie: IDataView = ({
   width,
   dataSource,
   valueKey,
-  onMouseEnter = defaultHandler,
-  onMouseLeave = defaultHandler,
-}: Props) => {
+  onMouseEnter = () => null,
+  onMouseLeave = () => null,
+}): JSX.Element => {
   const half = width / 2;
 
   const getColor = useCallback(() => {

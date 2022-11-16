@@ -1,10 +1,9 @@
 import React from "react";
 import { Query } from "@cubejs-client/core";
-import { PieChart } from "./pieChart";
+import { DataViewPie, DataViewInteractionHandler } from "./data-view";
 import { useCubeJSQuery } from "../hooks/useCubeJSQuery";
 import { Status } from "../util/status";
 import { ErrorMessage, LoadingMessage } from "./queryStatusMessage";
-import { Datum, DataSource, MouseInteractionHandler } from "./types";
 
 type Props = {
   children?: React.ReactNode[];
@@ -28,12 +27,20 @@ export const App = (props: Props): JSX.Element => {
 
   const width = 400;
 
-  const onMouseEnter: MouseInteractionHandler = ({ data, value, target }) => {
+  const onMouseEnter: DataViewInteractionHandler = ({
+    data,
+    value,
+    target,
+  }) => {
     console.log(data, value, target);
     target?.setAttribute("fill", "green");
   };
 
-  const onMouseLeave: MouseInteractionHandler = ({ data, value, target }) => {
+  const onMouseLeave: DataViewInteractionHandler = ({
+    data,
+    value,
+    target,
+  }) => {
     console.log(data, value, target);
     target?.setAttribute("fill", "inherit");
   };
@@ -44,7 +51,7 @@ export const App = (props: Props): JSX.Element => {
       {status === Status.Loading && <LoadingMessage />}
       {status === Status.Failed && <ErrorMessage err={error} />}
       {status === Status.Complete && (
-        <PieChart
+        <DataViewPie
           dataSource={dataSource}
           valueKey="Orders.count"
           width={width}
