@@ -1,18 +1,8 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { Pie } from "@visx/shape";
 import { Group } from "@visx/group";
 import { IDataView } from "./data-view-interface";
-
-const color = [
-  "yellow",
-  "orange",
-  "cyan",
-  "black",
-  "red",
-  "goldenrod",
-  "purple",
-  "tomato",
-];
+import { getColorRange } from "../../util/colorRange";
 
 export const DataViewPie: IDataView = ({
   width,
@@ -23,9 +13,20 @@ export const DataViewPie: IDataView = ({
 }): JSX.Element => {
   const half = width / 2;
 
-  const getColor = useCallback(() => {
-    return color[~~(Math.random() * color.length)];
-  }, [dataSource]);
+  const colors = useMemo(
+    () => (dataSource ? getColorRange(dataSource.length) : []),
+    [dataSource]
+  );
+
+  // const colors:string[] = () => (dataSource ? getColorRange(dataSource.length) : []);
+
+  console.log(colors);
+
+  const getColor = (index: number) => {
+    const col = index <= colors.length ? colors[index] : colors[0];
+    console.log(index, col);
+    return col;
+  };
 
   return (
     <svg width={width} height={width}>
@@ -34,16 +35,16 @@ export const DataViewPie: IDataView = ({
           data={dataSource}
           pieValue={(dataSource) => Number(dataSource[valueKey])}
           outerRadius={half}
-          innerRadius={half - 20}
+          innerRadius={half - 50}
           padAngle={0.01}
         >
           {(pie) => {
-            return pie.arcs.map((arc) => {
+            return pie.arcs.map((arc, index) => {
               return (
                 <g key={JSON.stringify(arc)}>
                   <path
                     d={pie.path(arc) || ""}
-                    fill={getColor()}
+                    fill={getColor(index)}
                     onMouseEnter={(e) =>
                       onMouseEnter({ ...arc, target: e.currentTarget })
                     }

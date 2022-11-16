@@ -13,7 +13,6 @@ export const Chart = ({ status = Status.Ready, error, children }: Props) => (
     {status === Status.Idle && <p>Ready to query</p>}
     {status === Status.Loading && <LoadingMessage />}
     {status === Status.Failed && <ErrorMessage err={error} />}
-    {status === Status.Complete && <p>Jkl</p>}
-    {children}
+    {status === Status.Complete && children}
   </div>
 );
