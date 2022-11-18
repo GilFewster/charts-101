@@ -4,3 +4,4 @@ export type {
 } from "./data-view-interface";
 
 export { DataViewPie } from "./data-view-pie";
+export { DataViewBar } from "./data-view-bar";

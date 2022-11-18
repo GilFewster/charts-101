@@ -1,6 +1,10 @@
 import React from "react";
 import { Query } from "@cubejs-client/core";
-import { DataViewPie, DataViewInteractionHandler } from "./data-view";
+import {
+  DataViewPie,
+  DataViewInteractionHandler,
+  DataViewBar,
+} from "./data-view";
 import { useCubeJSQuery } from "../hooks/useCubeJSQuery";
 import { Chart } from "./chart";
 import { overrideSVGFill, restoreSVGFill } from "../util/svgFillToggle";
@@ -38,7 +42,18 @@ export const App = (props: Props): JSX.Element => {
       <DataViewPie
         dataSource={dataSource}
         valueKey="Orders.count"
+        labelKey="Orders.createdAt.month"
         width={400}
+        height={300}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+      />
+      <DataViewBar
+        dataSource={dataSource}
+        valueKey="Orders.count"
+        labelKey="Orders.createdAt.month"
+        width={400}
+        height={300}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
       />
