@@ -1,23 +1,33 @@
 import React, { useMemo } from "react";
-import { Bar } from "@visx/shape";
+import { LinePath } from "@visx/shape";
 import { Group } from "@visx/group";
-import { IDataView } from "./data-view-interface";
+import { IDataView, IDataViewProps } from "./data-view-interface";
 import { scaleBand, scaleLinear } from "@visx/scale";
+import * as allCurves from "@visx/curve";
 import { ScaleBand, ScaleLinear } from "d3-scale";
 
-export const DataViewBar: IDataView = ({
+type CurveType = keyof typeof allCurves;
+const curveTypes = Object.keys(allCurves);
+
+type Props = IDataViewProps & {
+  curveStyle?: CurveType;
+};
+
+export const DataViewLine: IDataView = ({
   width,
   height,
   dataSource,
   valueKey,
   labelKey,
   fillColor,
+  curveStyle = "curveNatural",
   onMouseEnter = () => null,
   onMouseLeave = () => null,
-}): JSX.Element => {
+}: Props): JSX.Element => {
   const margin = { top: 20, bottom: 20, left: 20, right: 20 };
   const xMax = width - margin.left - margin.right;
   const yMax = height - margin.top - margin.bottom;
+
   const x = (d: any): string => d[labelKey];
   const y = (d: any): number => +d[valueKey];
 
@@ -54,19 +64,16 @@ export const DataViewBar: IDataView = ({
 
   return (
     <Group>
-      {dataSource.map((d, i) => {
-        const barHeight = yMax - (yPoint(d) || 0);
-        return (
-          <Bar
-            x={xPoint(d)}
-            y={yMax - barHeight}
-            height={barHeight}
-            width={xScale.bandwidth()}
-            style={{ fill: fillColor || "#2eff00" }}
-          />
-        );
-      })}
-      {/* </svg> */}
+      <LinePath
+        curve={allCurves["curveNatural"]}
+        data={dataSource}
+        x={(d) => xPoint(d) || 0}
+        y={(d) => yPoint(d) || 0}
+        stroke={fillColor || "#333"}
+        strokeWidth={3}
+        strokeOpacity={1}
+        shapeRendering="geometricPrecision"
+      />
     </Group>
   );
 };

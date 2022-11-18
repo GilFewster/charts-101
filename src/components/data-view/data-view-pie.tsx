@@ -23,7 +23,6 @@ export const DataViewPie: IDataView = ({
 
   const getColor = (index: number) => {
     const col = index <= colors.length ? colors[index] : colors[0];
-    console.log(index, col);
     return col;
   };
 

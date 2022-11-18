@@ -1,13 +1,7 @@
 import React from "react";
 import { Query } from "@cubejs-client/core";
-import {
-  DataViewPie,
-  DataViewInteractionHandler,
-  DataViewBar,
-} from "./data-view";
-import { useCubeJSQuery } from "../hooks/useCubeJSQuery";
-import { Chart } from "./chart";
-import { overrideSVGFill, restoreSVGFill } from "../util/svgFillToggle";
+import { OrdersOverTime } from "./query-views/ordersOverTime";
+import { OrderStatusOverTime } from "./query-views/orderStatusOverTime";
 
 type Props = {
   children?: React.ReactNode[];
@@ -25,38 +19,9 @@ const query: Query = {
 };
 
 export const App = (props: Props): JSX.Element => {
-  const { status, error, dataSource } = useCubeJSQuery({
-    query,
-  });
-
-  const onMouseEnter: DataViewInteractionHandler = ({ target }) => {
-    target && overrideSVGFill(target, "green");
-  };
-
-  const onMouseLeave: DataViewInteractionHandler = ({ target }) => {
-    target && restoreSVGFill(target);
-  };
-
   return (
-    <Chart status={status} error={error}>
-      <DataViewPie
-        dataSource={dataSource}
-        valueKey="Orders.count"
-        labelKey="Orders.createdAt.month"
-        width={400}
-        height={300}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-      />
-      <DataViewBar
-        dataSource={dataSource}
-        valueKey="Orders.count"
-        labelKey="Orders.createdAt.month"
-        width={400}
-        height={300}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-      />
-    </Chart>
+    <>
+      <OrderStatusOverTime />
+    </>
   );
 };

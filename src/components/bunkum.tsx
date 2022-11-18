@@ -1,20 +1,26 @@
-import React, { useMemo } from "react";
-import { Bar } from "@visx/shape";
+import { useMemo } from "react";
 import { Group } from "@visx/group";
-import { IDataView } from "./data-view-interface";
 import { scaleBand, scaleLinear } from "@visx/scale";
+import { DataSource, Datum } from "./types";
+import { Bar } from "@visx/shape";
+import { letterFrequency } from "@visx/mock-data";
 import { ScaleBand, ScaleLinear } from "d3-scale";
 
-export const DataViewBar: IDataView = ({
+type Props = {
+  width: number;
+  height: number;
+  dataSource: DataSource;
+  valueKey: string;
+  labelKey: string;
+};
+
+export const Bunkum = ({
   width,
   height,
   dataSource,
   valueKey,
   labelKey,
-  fillColor,
-  onMouseEnter = () => null,
-  onMouseLeave = () => null,
-}): JSX.Element => {
+}: Props) => {
   const margin = { top: 20, bottom: 20, left: 20, right: 20 };
   const xMax = width - margin.left - margin.right;
   const yMax = height - margin.top - margin.bottom;
@@ -53,20 +59,21 @@ export const DataViewBar: IDataView = ({
   const yPoint = compose(yScale, y);
 
   return (
-    <Group>
+    <svg width={width} height={height}>
       {dataSource.map((d, i) => {
         const barHeight = yMax - (yPoint(d) || 0);
         return (
-          <Bar
-            x={xPoint(d)}
-            y={yMax - barHeight}
-            height={barHeight}
-            width={xScale.bandwidth()}
-            style={{ fill: fillColor || "#2eff00" }}
-          />
+          <Group key={`bar-${i}`}>
+            <Bar
+              x={xPoint(d)}
+              y={yMax - barHeight}
+              height={barHeight}
+              width={xScale.bandwidth()}
+              style={{ fill: "#2eff00" }}
+            />
+          </Group>
         );
       })}
-      {/* </svg> */}
-    </Group>
+    </svg>
   );
 };

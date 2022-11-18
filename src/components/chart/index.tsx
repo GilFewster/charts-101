@@ -22,9 +22,6 @@ const ResponsiveChart = ({
 };
 
 export const Chart = ({ status = Status.Ready, error, children }: Props) => {
-  // const responsiveChart = withParentSize(ResponsiveChart);
-
-  console.log(status);
   const width = 400;
   const height = 300;
 
