@@ -1,15 +1,15 @@
 import React, { useCallback, useEffect, useMemo } from "react";
 import { Pie } from "@visx/shape";
 import { Group } from "@visx/group";
-import { IDataView } from "./data-view-interface";
+import { IDataView } from "./data-view";
 import { getColorRange } from "../../util/colorRange";
+import { Accessor } from "../types";
 
 export const DataViewPie: IDataView = ({
   width,
   height,
   dataSource,
   valueKey,
-  labelKey,
   onMouseEnter = () => null,
   onMouseLeave = () => null,
 }): JSX.Element => {
@@ -26,11 +26,13 @@ export const DataViewPie: IDataView = ({
     return col;
   };
 
+  const arcValue: Accessor<number> = (d) => d[valueKey];
+
   return (
     <Group top={half} left={half}>
       <Pie
         data={dataSource}
-        pieValue={(dataSource) => Number(dataSource[valueKey])}
+        pieValue={arcValue}
         outerRadius={half}
         innerRadius={half - 50}
         padAngle={0.01}

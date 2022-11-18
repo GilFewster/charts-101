@@ -39,8 +39,8 @@ export const OrdersOverTime = (props: Props): JSX.Element => {
   };
 
   return (
-    <Chart status={status} error={error}>
-      <DataViewBar
+    <Chart status={status} error={error} width={300} height={400}>
+      <DataViewPie
         dataSource={dataSource}
         valueKey="Orders.count"
         labelKey="Orders.createdAt.month"
@@ -48,13 +48,13 @@ export const OrdersOverTime = (props: Props): JSX.Element => {
         height={300}
         fillColor={"blue"}
       />
-      <DataViewLine
+      <DataViewBar
         dataSource={dataSource}
         valueKey="Orders.count"
         labelKey="Orders.createdAt.month"
         width={400}
         height={300}
-        fillColor={"green"}
+        fillColor={"blue"}
       />
     </Chart>
   );

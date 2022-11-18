@@ -35,7 +35,7 @@ export const OrderStatusOverTime = (props: Props): JSX.Element => {
   });
 
   return (
-    <Chart status={status} error={error}>
+    <Chart status={status} error={error} width={400} height={300}>
       <DataViewBar
         dataSource={dataSource}
         valueKey="completed,Orders.count"

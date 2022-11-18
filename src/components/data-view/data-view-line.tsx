@@ -1,16 +1,19 @@
 import React, { useMemo } from "react";
 import { LinePath } from "@visx/shape";
 import { Group } from "@visx/group";
-import { IDataView, IDataViewProps } from "./data-view-interface";
-import { scaleBand, scaleLinear } from "@visx/scale";
-import * as allCurves from "@visx/curve";
-import { ScaleBand, ScaleLinear } from "d3-scale";
+import { IDataView, IDataViewProps } from "./data-view";
+// import * as allCurves from "@visx/curve";
+import { curveLinear, curveNatural } from "@visx/curve";
 
-type CurveType = keyof typeof allCurves;
-const curveTypes = Object.keys(allCurves);
+import {
+  createPositionAccessor,
+  createValueAccessor,
+  getScaleBand,
+  getScaleLinear,
+} from "./util";
 
 type Props = IDataViewProps & {
-  curveStyle?: CurveType;
+  curveStyle?: typeof curveLinear | typeof curveNatural;
 };
 
 export const DataViewLine: IDataView = ({
@@ -20,55 +23,29 @@ export const DataViewLine: IDataView = ({
   valueKey,
   labelKey,
   fillColor,
-  curveStyle = "curveNatural",
+  curveStyle = curveNatural,
   onMouseEnter = () => null,
   onMouseLeave = () => null,
 }: Props): JSX.Element => {
-  const margin = { top: 20, bottom: 20, left: 20, right: 20 };
-  const xMax = width - margin.left - margin.right;
-  const yMax = height - margin.top - margin.bottom;
+  const xMax = width;
+  const yMax = height;
 
-  const x = (d: any): string => d[labelKey];
-  const y = (d: any): number => +d[valueKey];
+  const x = createValueAccessor<string>(labelKey);
+  const y = createValueAccessor<number>(valueKey);
 
-  const xScale = useMemo(
-    () =>
-      scaleBand<string>({
-        range: [0, xMax],
-        round: true,
-        domain: dataSource.map(x),
-        padding: 0.4,
-      }),
-    [xMax]
-  );
-  const yScale = useMemo(
-    () =>
-      scaleLinear<number>({
-        range: [yMax, 0],
-        round: true,
-        domain: [0, Math.max(...dataSource.map(y))],
-      }),
-    [yMax]
-  );
+  const xScale = useMemo(getScaleBand(xMax, dataSource, x), [xMax]);
+  const yScale = useMemo(getScaleLinear(yMax, dataSource, y), [yMax]);
 
-  const compose =
-    (
-      scale: ScaleBand<string> | ScaleLinear<number, number, never>,
-      accessor: (d: any) => any
-    ) =>
-    (data: any) =>
-      scale(accessor(data));
-
-  const xPoint = compose(xScale, x);
-  const yPoint = compose(yScale, y);
+  const xPoint = createPositionAccessor(xScale, x);
+  const yPoint = createPositionAccessor(yScale, y);
 
   return (
     <Group>
       <LinePath
-        curve={allCurves["curveNatural"]}
+        curve={curveStyle}
         data={dataSource}
-        x={(d) => xPoint(d) || 0}
-        y={(d) => yPoint(d) || 0}
+        x={(d) => xPoint(d)}
+        y={(d) => yPoint(d)}
         stroke={fillColor || "#333"}
         strokeWidth={3}
         strokeOpacity={1}

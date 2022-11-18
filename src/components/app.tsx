@@ -21,6 +21,7 @@ const query: Query = {
 export const App = (props: Props): JSX.Element => {
   return (
     <>
+      <OrdersOverTime />
       <OrderStatusOverTime />
     </>
   );
