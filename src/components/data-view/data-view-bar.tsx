@@ -47,7 +47,13 @@ export const DataViewBar: IDataView = ({
             y={yMax - barHeight}
             height={barHeight}
             width={xScale.bandwidth()}
-            style={{ fill: fillColor || "#333" }}
+            fill={fillColor || "#333"}
+            onMouseEnter={(e) => {
+              onMouseEnter({ ...d, target: e.currentTarget });
+            }}
+            onMouseLeave={(e) =>
+              onMouseLeave({ ...d, target: e.currentTarget })
+            }
           />
         );
       })}

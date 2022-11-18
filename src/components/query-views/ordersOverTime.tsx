@@ -47,6 +47,8 @@ export const OrdersOverTime = (props: Props): JSX.Element => {
         width={400}
         height={300}
         fillColor={"blue"}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
       />
       <DataViewBar
         dataSource={dataSource}
@@ -55,6 +57,8 @@ export const OrdersOverTime = (props: Props): JSX.Element => {
         width={400}
         height={300}
         fillColor={"blue"}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
       />
     </Chart>
   );

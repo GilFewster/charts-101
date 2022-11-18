@@ -2,7 +2,6 @@ import React, { useMemo } from "react";
 import { LinePath } from "@visx/shape";
 import { Group } from "@visx/group";
 import { IDataView, IDataViewProps } from "./data-view";
-// import * as allCurves from "@visx/curve";
 import { curveLinear, curveNatural } from "@visx/curve";
 
 import {
