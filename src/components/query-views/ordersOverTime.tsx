@@ -4,7 +4,6 @@ import {
   DataViewPie,
   DataViewInteractionHandler,
   DataViewBar,
-  DataViewLine,
 } from "../data-view";
 import { useCubeJSQuery } from "../../hooks/useCubeJSQuery";
 import { Chart } from "../chart";
